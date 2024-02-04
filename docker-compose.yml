@@ -1,0 +1,56 @@
+version: '3.1'
+
+services:
+  wordpress:
+    build:
+      context: ./  # Substitua pelo caminho real para o diretório do seu Dockerfile
+      dockerfile: Dockerfile  # Nome do seu Dockerfile
+    ports:
+      - "8000:80"
+    environment:
+      WORDPRESS_DB_HOST: db
+      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_PASSWORD: Mamede12
+      WORDPRESS_DB_NAME: banco  # Ajustado para corresponder ao nome do banco no serviço db
+    volumes:
+      - wordpress_data:/var/www/html
+      - ./custom-php.ini:/usr/local/etc/php/conf.d/custom-php.ini
+    depends_on:
+      - db
+      - redis
+    tty: true
+    stdin_open: true
+
+  db:
+    image: mysql:5.7
+    volumes:
+      - db_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: Mamede12
+      MYSQL_DATABASE: banco  # Confirmado que é o mesmo usado pelo WordPress
+      MYSQL_USER: wordpress
+      MYSQL_PASSWORD: Mamede12
+    ports:
+      - "3306:3306"
+    tty: true
+    stdin_open: true
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:5.1
+    ports:
+      - "8080:80"
+    environment:
+      PMA_HOST: db
+      PMA_USER: root
+      PMA_PASSWORD: Mamede12
+    tty: true
+    stdin_open: true
+
+  redis:
+    image: redis:6.0
+    ports:
+      - "6379:6379"
+
+volumes:
+  wordpress_data:
+  db_data:
