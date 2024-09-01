@@ -9,7 +9,7 @@ services:
       - "8000:80"
     environment:
       WORDPRESS_DB_HOST: db
-      WORDPRESS_DB_USER: wordpress
+      WORDPRESS_DB_USER: wordpres
       WORDPRESS_DB_PASSWORD: Mamede12
       WORDPRESS_DB_NAME: banco  # Ajustado para corresponder ao nome do banco no serviço db
     volumes:
@@ -20,6 +20,9 @@ services:
       - redis
     tty: true
     stdin_open: true
+    networks:
+      - npm_public
+      - banco 
 
   db:
     image: mysql:5.7
@@ -34,6 +37,8 @@ services:
       - "3306:3306"
     tty: true
     stdin_open: true
+    networks:
+      - banco 
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin:5.1
@@ -45,11 +50,16 @@ services:
       PMA_PASSWORD: Mamede12
     tty: true
     stdin_open: true
+    networks:
+      - npm_public
+      - banco 
 
   redis:
     image: redis:6.0
     ports:
       - "6379:6379"
+    networks:
+      - npm_public
 
 volumes:
   wordpress_data:
