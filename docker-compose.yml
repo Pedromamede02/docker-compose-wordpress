@@ -64,3 +64,8 @@ services:
 volumes:
   wordpress_data:
   db_data:
+networks:
+  npm_public:
+    external: true
+  banco:
+    external: true
